@@ -7,12 +7,12 @@ synced_folders:
       :nfs: true
 
 boxes:
-  api:
+  lemp:
     box_name: 'ubuntu/trusty64'
     hostname: 'lemp.local'
     ip: 192.168.13.11
-     synced_folders:
-      api:
+    synced_folders:
+      lemp:
         from: '.'
         to: '/var/www/lemp'
         options:
@@ -20,7 +20,7 @@ boxes:
           :mount_options: ['vers=3', 'udp', 'actimeo=1']
     provisioners:
       shell:
-        api:
+        lemp:
           path: 'shell/lemp.sh'
     memory: 1024
     cpus:   2
