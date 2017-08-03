@@ -1,0 +1,26 @@
+---
+synced_folders:
+  vagrant:
+    from: '.'
+    to: '/vagrant'
+    options:
+      :nfs: true
+
+boxes:
+  api:
+    box_name: 'ubuntu/trusty64'
+    hostname: 'api.dev.local'
+    ip: 192.168.13.11
+    # synced_folders:
+    #  api:
+    #    from: '../api'
+    #    to: '/var/www/api'
+    #    options:
+    #      :nfs: true
+    #      :mount_options: ['vers=3', 'udp', 'actimeo=1']
+    provisioners:
+      shell:
+        api:
+          path: 'shell/lemp.sh'
+    memory: 1024
+    cpus:   2

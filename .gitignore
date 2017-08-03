@@ -9,6 +9,7 @@
 
 ### Vagrant
 .vagrant/
+Vagrantconfig.local.yml
 
 ### Windows
 Thumbs.db
