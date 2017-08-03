@@ -9,15 +9,15 @@ synced_folders:
 boxes:
   api:
     box_name: 'ubuntu/trusty64'
-    hostname: 'api.dev.local'
+    hostname: 'lemp.local'
     ip: 192.168.13.11
-    # synced_folders:
-    #  api:
-    #    from: '../api'
-    #    to: '/var/www/api'
-    #    options:
-    #      :nfs: true
-    #      :mount_options: ['vers=3', 'udp', 'actimeo=1']
+     synced_folders:
+      api:
+        from: '.'
+        to: '/var/www/lemp'
+        options:
+          :nfs: true
+          :mount_options: ['vers=3', 'udp', 'actimeo=1']
     provisioners:
       shell:
         api:
