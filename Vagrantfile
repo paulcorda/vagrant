@@ -2,7 +2,7 @@
 # # vi: set ft=ruby :
 
 # Install required vagrant plugins
-required_plugins = %w(vagrant-hostsupdater)
+required_plugins = %w(vagrant-hostsupdater vagrant-docker-compose)
 required_plugins.each do |plugin|
     system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
 end
@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
 
       # Increase timeout as per the doctor's prescription (enable if timeout issues)
-      # box.vm.boot_timeout = 600;
+      box.vm.boot_timeout = 600;
 
       # Go with https://atlas.hashicorp.com boxes
       box.vm.box = boxconfig['box_name']
@@ -89,9 +89,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       if provisioners.has_key? 'docker_compose'
         provisioners['docker_compose'].each do |id, docker_compose|
-          options = docker_compose['options']
+          env_hash = Hash.new
 
-          box.vm.provision :docker_compose, :yml => docker_compose['path'], rebuild: options['rebuild'], run: options['run']
+          if File.exist?(docker_compose['env_path'])
+            env_hash = Hash[*File.read(docker_compose['env_path']).split(/[=\n]+/)]
+
+            # ignore keys (lines) starting with #
+            env_hash.delete_if { |key, value| key.to_s.match(/^#.*/) }
+          end
+
+          box.vm.provision :docker_compose,
+            yml: docker_compose['yml_path'],
+            env: env_hash,
+            rebuild: true,
+            run: 'always'
         end
       end
     end

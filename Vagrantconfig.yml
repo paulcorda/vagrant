@@ -10,9 +10,9 @@ boxes:
   lemp:
     box_name: 'ubuntu/trusty64'
     hostname: 'lemp.local'
-    ip: 192.168.13.11
+    ip: 192.168.13.10
     synced_folders:
-      lemp:
+      codebase:
         from: '.'
         to: '/var/www/lemp'
         options:
@@ -22,5 +22,25 @@ boxes:
       shell:
         lemp:
           path: 'shell/lemp.sh'
+    memory: 512
+    cpus:   2
+
+  docker_compose_app:
+    box_name: 'ubuntu/trusty64'
+    hostname: 'docker-compose.local'
+    ip: 192.168.13.11
+    synced_folders:
+      codebase:
+        from: '.'
+        to: '/var/www/docker-compose-app'
+        options:
+          :nfs: true
+          :mount_options: ['vers=3', 'udp', 'actimeo=1']
+    provisioners:
+      docker: ~
+      docker_compose:
+        docker_compose_app:
+          yml_path: '/var/www/docker-compose-app/docker-compose.yml'
+          env_path: './.env' # This has to be the host's path
     memory: 1024
     cpus:   2
