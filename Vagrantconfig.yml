@@ -1,10 +1,15 @@
 ---
+config:
+  require_version: '>= 1.9.7'
+  api_version: '2'
+  required_plugins:
+    - 'vagrant-hostsupdater'
+    - 'vagrant-docker-compose'
+
 synced_folders:
   vagrant:
     from: '.'
     to: '/vagrant'
-    options:
-      :nfs: true
 
 boxes:
   lemp:
@@ -15,15 +20,12 @@ boxes:
       codebase:
         from: '.'
         to: '/var/www/lemp'
-        options:
-          :nfs: true
-          :mount_options: ['vers=3', 'udp', 'actimeo=1']
     provisioners:
       shell:
         lemp:
           path: 'shell/lemp.sh'
-    memory: 512
-    cpus:   2
+    memory: 256
+    cpus:   1
 
   docker_compose_app:
     box_name: 'ubuntu/trusty64'
@@ -33,14 +35,11 @@ boxes:
       codebase:
         from: '.'
         to: '/var/www/docker-compose-app'
-        options:
-          :nfs: true
-          :mount_options: ['vers=3', 'udp', 'actimeo=1']
     provisioners:
       docker: ~
       docker_compose:
         docker_compose_app:
           yml_path: '/var/www/docker-compose-app/docker-compose.yml'
           env_path: './.env' # This has to be the host's path
-    memory: 1024
-    cpus:   2
+    memory: 256
+    cpus:   1

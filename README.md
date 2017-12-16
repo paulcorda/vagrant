@@ -1,13 +1,11 @@
 # Vagrant
 
+Quickly set up a simple (or complex) VM infrastructure for your project(s).  
+
 ## TL;DR
-Run ```$ vagrant up``` to set up a basic LEMP box with networking and hosts configured.  
-Check ```Vagrantconfig.yml``` to see it's default settings.  
+1. Adapt the existing vagrant box configs that are defined in ```Vagrantconfig.yml``` or create your own completely custom ones (use ```Vagrantconfig.local.yml```).  
+2. Run ```$ vagrant up {BOX_NAME}``` to spin up a box with networking and hosts configured.  
 
 ## Config
-The default boxes are configured via an yml file, ```Vagrantconfig.yml```.  
-To override the default config file, or define new custom boxes, the possibility  
-of a non-source-controlled file has been enabled: ```Vagrantconfig.local.yml```.  
-
-The local file can be used to safely override any default changes or define totally new,  
-custom boxes.
+* All default boxes are defined in ```Vagrantconfig.yml```.  
+* Custom boxes and extensions of default ones should be defined within a vcs-disabled ```Vagrantconfig.local.yml``` file.  

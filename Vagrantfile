@@ -1,47 +1,50 @@
 # -*- mode: ruby -*-
 # # vi: set ft=ruby :
 
-# Install required vagrant plugins
-required_plugins = %w(vagrant-hostsupdater vagrant-docker-compose)
-required_plugins.each do |plugin|
-    system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
-end
-
 # Required ruby gems & classes
 require 'yaml'
 require './ruby/classes/hash.rb'
 
-# Vagrant configs
-Vagrant.require_version '>= 1.9.7'
-VAGRANTFILE_API_VERSION = '2'
-
-# Load config files
-vagrantconfig = YAML.load_file('Vagrantconfig.yml')
+# Load Vagrant configs
+Vagrantconfig = YAML.load_file('Vagrantconfig.yml')
 
 if File.exist?('Vagrantconfig.local.yml')
-  vagrantconfig_local = YAML.load_file('Vagrantconfig.local.yml')
-  vagrantconfig.rmerge!(vagrantconfig_local)
+  Vagrantconfig_local = YAML.load_file('Vagrantconfig.local.yml')
+  Vagrantconfig.rmerge!(Vagrantconfig_local)
 end
 
-if !vagrantconfig.has_key? 'boxes'
-  abort('No \'boxes\' configured!')
+if !Vagrantconfig.has_key? 'config'
+  abort('No \'config\' key set!')
+end
+
+# Vagrant configs
+Vagrant.require_version Vagrantconfig['config']['require_version']
+VAGRANTFILE_API_VERSION =  Vagrantconfig['config']['api_version']
+
+# Install required vagrant plugins
+Vagrantconfig['config']['required_plugins'].each do |plugin|
+    system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+end
+
+if !Vagrantconfig.has_key? 'boxes'
+  abort('No \'boxes\' configured. Nothing to do!')
 end
 
 # base synced folders
 syncedfolders = {}
-if vagrantconfig.has_key? 'synced_folders'
-  syncedfolders = vagrantconfig['synced_folders']
+if Vagrantconfig.has_key? 'synced_folders'
+  syncedfolders = Vagrantconfig['synced_folders']
 end
 
 # base provisioners
 provisioners = {}
-if vagrantconfig.has_key? 'provisioners'
-  provisioners = vagrantconfig['provisioners']
+if Vagrantconfig.has_key? 'provisioners'
+  provisioners = Vagrantconfig['provisioners']
 end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  vagrantconfig['boxes'].keys.sort.each do |boxname|
-    boxconfig = vagrantconfig['boxes'][boxname]
+  Vagrantconfig['boxes'].keys.sort.each do |boxname|
+    boxconfig = Vagrantconfig['boxes'][boxname]
 
     config.vm.define boxname do |box|
       # Set misc options
