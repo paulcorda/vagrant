@@ -11,11 +11,9 @@
 .vagrant/
 Vagrantconfig.local.yml
 
-### Windows
+### OS
 Thumbs.db
-
-### macOS
-*.DS_Store
+.DS_Store
 
 ### misc
 log/
