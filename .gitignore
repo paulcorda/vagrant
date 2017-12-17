@@ -15,5 +15,6 @@ Vagrantconfig.local.yml
 Thumbs.db
 .DS_Store
 
-### misc
+### Logs
 log/
+/*.log

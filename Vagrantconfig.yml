@@ -13,7 +13,7 @@ synced_folders:
 
 boxes:
   lemp:
-    box_name: 'ubuntu/trusty64'
+    box_name: 'ubuntu/xenial64'
     hostname: 'lemp.local'
     ip: 192.168.13.10
     synced_folders:
@@ -28,7 +28,7 @@ boxes:
     cpus:   1
 
   docker_compose:
-    box_name: 'ubuntu/trusty64'
+    box_name: 'ubuntu/xenial64'
     hostname: 'docker-compose.local'
     ip: 192.168.13.11
     synced_folders:
@@ -48,7 +48,7 @@ boxes:
     cpus:   1
 
   docker:
-    box_name: 'ubuntu/trusty64'
+    box_name: 'ubuntu/xenial64'
     hostname: 'docker.local'
     ip: 192.168.13.12
     synced_folders:
