@@ -23,23 +23,42 @@ boxes:
     provisioners:
       shell:
         lemp:
-          path: 'shell/lemp.sh'
+          path: 'provisioners/lemp.sh'
     memory: 256
     cpus:   1
 
-  docker_compose_app:
+  docker_compose:
     box_name: 'ubuntu/trusty64'
     hostname: 'docker-compose.local'
     ip: 192.168.13.11
     synced_folders:
       codebase:
         from: '.'
-        to: '/var/www/docker-compose-app'
+        to: '/var/www/docker-compose'
+      helpers:
+        from: './helpers'
+        to: '/var/tmp/scripts'
     provisioners:
       docker: ~
       docker_compose:
         docker_compose_app:
-          yml_path: '/var/www/docker-compose-app/docker-compose.yml'
+          yml_path: '/var/www/docker-compose/docker-compose.yml'
           env_path: './.env' # This has to be the host's path
+    memory: 256
+    cpus:   1
+
+  docker:
+    box_name: 'ubuntu/trusty64'
+    hostname: 'docker.local'
+    ip: 192.168.13.12
+    synced_folders:
+      codebase:
+        from: '.'
+        to: '/var/www/docker'
+      helpers:
+        from: './helpers'
+        to: '/var/tmp/scripts'
+    provisioners:
+      docker: ~
     memory: 256
     cpus:   1
