@@ -4,6 +4,7 @@
 # Required ruby gems & classes
 require 'yaml'
 require './ruby/classes/hash.rb'
+require './ruby/modules/os.rb'
 
 # Load Vagrant configs
 Vagrantconfig = YAML.load_file('Vagrantconfig.yml')
@@ -64,25 +65,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       box.vm.network "private_network", ip: boxconfig['ip']
       box.vm.hostname = boxconfig['hostname']
 
+      if boxconfig.has_key? 'hosts'
+        box.hostsupdater.aliases = boxconfig['hosts']
+      end
+
       # run synced_folders
       if boxconfig.has_key? 'synced_folders'
         syncedfolders.rmerge!(boxconfig['synced_folders'])
       end
 
       syncedfolders.each do |name, opt|
-        box.vm.synced_folder opt['from'], opt['to'], opt['options']
+        if OS.windows?
+          box.vm.synced_folder opt['from'], opt['to'], type: "smb"
+        else
+          box.vm.synced_folder opt['from'], opt['to'], type: "nfs"
+        end
       end
 
       # run provisioning
       if boxconfig.has_key? 'provisioners'
         provisioners.rmerge!(boxconfig['provisioners'])
-      end
-
-      # Provisioning - shell
-      if provisioners.has_key? 'shell'
-        provisioners['shell'].each do |id, shell|
-          box.vm.provision :shell, :path => shell['path']
-        end
       end
 
       # Provisioning - Docker & Docker Compose
@@ -106,6 +108,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             env: env_hash,
             rebuild: true,
             run: 'always'
+        end
+      end
+
+      # Provisioning - shell
+      if provisioners.has_key? 'shell'
+        provisioners['shell'].each do |id, shell|
+          box.vm.provision :shell, :path => shell['path']
         end
       end
     end
