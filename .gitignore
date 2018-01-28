@@ -1,10 +1,7 @@
 ### JetBrains
-.idea/**/modules.xml
-.idea/**/vcs.xml
+## User specific
 .idea/**/workspace.xml
 .idea/**/tasks.xml
-.idea/**/vagrant.iml
-.idea/copyright
 .idea/dictionaries
 
 ### Vagrant
